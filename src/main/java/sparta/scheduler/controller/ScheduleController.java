@@ -30,4 +30,19 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @PatchMapping("/schedule/{scheduleId}")
+    public ResponseEntity<GetScheduleResponse> updateSchedule(
+            @RequestHeader("x-Scheduler-Password") String password,
+            @PathVariable Long scheduleId ,
+            @RequestBody UpdateScheduleRequest request) {
+        Boolean isValidPassword = scheduleService.checkValidPassword(scheduleId , password);
+        if(!isValidPassword){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        GetScheduleResponse result = scheduleService.updateSchedule(scheduleId , request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }

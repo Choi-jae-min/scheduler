@@ -62,6 +62,30 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getLastModifiedAt()
         );
-        return new GetScheduleResponse("성동적으로 조회 되었습니다",scheduleDto);
+        return new GetScheduleResponse("성공적으로 조회 되었습니다",scheduleDto);
+    }
+
+    public Boolean checkValidPassword(Long scheduleId, String password) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+
+        return schedule.getPassword().equals(password);
+    }
+    @Transactional
+    public GetScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request){
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
+        schedule.update(request);
+        ScheduleDto scheduleDto = new ScheduleDto(
+                schedule.getId(),
+                schedule.getTitle(),
+                schedule.getContent(),
+                schedule.getPoster(),
+                schedule.getCreatedAt(),
+                schedule.getLastModifiedAt()
+        );
+        return new GetScheduleResponse("성공적으로 수정 되었습니다" , scheduleDto);
     }
 }

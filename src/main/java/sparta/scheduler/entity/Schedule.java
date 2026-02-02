@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import sparta.scheduler.dto.UpdateScheduleRequest;
 
 import java.time.LocalDateTime;
 
@@ -47,4 +48,14 @@ public class Schedule {
         this.poster = poster;
         this.password = password;
     }
+
+    public void update(UpdateScheduleRequest req) {
+        if (req.hasTitle()) {
+            this.title = req.getTitle();
+        }
+        if (req.hasPoster()) {
+            this.poster = req.getPoster();
+        }
+    }
+
 }
