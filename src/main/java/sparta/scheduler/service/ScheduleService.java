@@ -1,6 +1,7 @@
 package sparta.scheduler.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sparta.scheduler.dto.*;
@@ -31,7 +32,7 @@ public class ScheduleService {
 
     @Transactional
     public GetAllScheduleResponse getAll() {
-       List<Schedule> schedules = scheduleRepository.findAll();
+       List<Schedule> schedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
        List<ScheduleDto> scheduleDtos = new ArrayList<>();
        for (Schedule schedule : schedules) {
            ScheduleDto scheduleDto = new ScheduleDto(
