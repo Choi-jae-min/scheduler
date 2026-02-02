@@ -16,19 +16,14 @@ public class ScheduleService {
 
     @Transactional
     public CreateScheduleResponse createSchedule(CreateScheduleRequest scheduleRequest) {
-        try {
-            Schedule schedule = new Schedule(
-                    scheduleRequest.getTitle(),
-                    scheduleRequest.getContent(),
-                    scheduleRequest.getPoster(),
-                    scheduleRequest.getPassword()
-            );
-            scheduleRepository.save(schedule);
+        Schedule schedule = new Schedule(
+                scheduleRequest.getTitle(),
+                scheduleRequest.getContent(),
+                scheduleRequest.getPoster(),
+                scheduleRequest.getPassword()
+        );
+        scheduleRepository.save(schedule);
 
-            return new CreateScheduleResponse("성공적으로 생성 되었습니다." , schedule.getId());
-        }catch (Exception e) {
-            System.out.println("Error" + e);
-            return new CreateScheduleResponse("내부 서버 오류.");
-        }
+        return new CreateScheduleResponse("성공적으로 생성 되었습니다." , schedule.getId());
     }
 }
