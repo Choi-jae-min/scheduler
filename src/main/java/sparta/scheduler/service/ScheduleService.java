@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sparta.scheduler.dto.comment.CommentDto;
 import sparta.scheduler.dto.schedule.*;
+import sparta.scheduler.entity.Comment;
 import sparta.scheduler.entity.Schedule;
+import sparta.scheduler.repository.CommentRepository;
 import sparta.scheduler.repository.ScheduleRepository;
 
 import java.util.ArrayList;
@@ -15,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
-
+    private final CommentRepository commentRepository;
 
     @Transactional
     public CreateScheduleResponse createSchedule(CreateScheduleRequest scheduleRequest) {
@@ -32,7 +35,7 @@ public class ScheduleService {
 
     @Transactional
     public GetAllScheduleResponse getAll() {
-       List<Schedule> schedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
+        List<Schedule> schedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
        List<ScheduleDto> scheduleDtos = new ArrayList<>();
        for (Schedule schedule : schedules) {
            ScheduleDto scheduleDto = new ScheduleDto(
@@ -54,11 +57,24 @@ public class ScheduleService {
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
         );
 
-        ScheduleDto scheduleDto = new ScheduleDto(
+        List<Comment> commentList = commentRepository.findALLByScheduleId(scheduleId);
+        List<CommentDto> commentDtos = new ArrayList<>();
+        for (Comment comment : commentList) {
+            CommentDto commentDto = new CommentDto(
+                    comment.getId(),
+                    comment.getContent(),
+                    comment.getPoster(),
+                    comment.getCreatedAt(),
+                    comment.getLastModifiedAt()
+            );
+            commentDtos.add(commentDto);
+        }
+        ScheduleWithCommentDto scheduleDto = new ScheduleWithCommentDto(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
                 schedule.getPoster(),
+                commentDtos,
                 schedule.getCreatedAt(),
                 schedule.getLastModifiedAt()
         );
@@ -72,8 +88,9 @@ public class ScheduleService {
 
         return schedule.getPassword().equals(password);
     }
+
     @Transactional
-    public GetScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request){
+    public UpdateScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request){
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
         );
@@ -86,7 +103,7 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getLastModifiedAt()
         );
-        return new GetScheduleResponse("성공적으로 수정 되었습니다" , scheduleDto);
+        return new UpdateScheduleResponse("성공적으로 수정 되었습니다" , scheduleDto);
     }
 
     @Transactional

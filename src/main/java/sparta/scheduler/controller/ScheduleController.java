@@ -31,7 +31,7 @@ public class ScheduleController {
     }
 
     @PatchMapping("/schedule/{scheduleId}")
-    public ResponseEntity<GetScheduleResponse> updateSchedule(
+    public ResponseEntity<UpdateScheduleResponse> updateSchedule(
             @RequestHeader("x-Scheduler-Password") String password,
             @PathVariable Long scheduleId ,
             @RequestBody UpdateScheduleRequest request) {
@@ -40,7 +40,7 @@ public class ScheduleController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        GetScheduleResponse result = scheduleService.updateSchedule(scheduleId , request);
+        UpdateScheduleResponse result = scheduleService.updateSchedule(scheduleId , request);
 
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
