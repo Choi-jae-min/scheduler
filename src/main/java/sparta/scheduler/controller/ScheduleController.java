@@ -45,4 +45,18 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
+    @DeleteMapping("/schedule/{scheduleId}")
+    public ResponseEntity<DeleteScheduleResponse> deleteSchedule(
+            @RequestHeader("x-Scheduler-Password") String password,
+            @PathVariable Long scheduleId) {
+        Boolean isValidPassword = scheduleService.checkValidPassword(scheduleId , password);
+        if(!isValidPassword){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        DeleteScheduleResponse result = scheduleService.deleteSchedule(scheduleId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }

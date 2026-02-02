@@ -88,4 +88,14 @@ public class ScheduleService {
         );
         return new GetScheduleResponse("성공적으로 수정 되었습니다" , scheduleDto);
     }
+
+    @Transactional
+    public DeleteScheduleResponse deleteSchedule(Long scheduleId) {
+        Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("이미 존재하지 않는 일정입니다.")
+        );
+
+        scheduleRepository.delete(schedule);
+        return new DeleteScheduleResponse(scheduleId,"성공적으로 삭제 되었습니다");
+    }
 }
