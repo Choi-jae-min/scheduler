@@ -5,29 +5,25 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import sparta.scheduler.dto.schedule.UpdateScheduleRequest;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name ="comments")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-@Entity
-@Table(name = "Schedules")
-public class Schedule {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30, nullable = false)
-    private String title;
-
-    @Column(length = 200, nullable = false)
+    @Column(length = 100, nullable = false)
     private String content;
 
     @Column(nullable = false)
@@ -36,26 +32,19 @@ public class Schedule {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false) // 조건 - 매핑 관계 사용 X
+    private Long scheduleId;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     private LocalDateTime lastModifiedAt;
 
-    public Schedule(String title, String content, String poster, String password) {
-        this.title = title;
+    public Comment(String content, String poster, String password, Long scheduleId) {
         this.content = content;
         this.poster = poster;
         this.password = password;
+        this.scheduleId = scheduleId;
     }
-
-    public void update(UpdateScheduleRequest req) {
-        if (req.hasTitle()) {
-            this.title = req.getTitle();
-        }
-        if (req.hasPoster()) {
-            this.poster = req.getPoster();
-        }
-    }
-
 }

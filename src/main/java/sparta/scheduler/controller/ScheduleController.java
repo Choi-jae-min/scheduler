@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sparta.scheduler.dto.*;
+import sparta.scheduler.dto.schedule.*;
 import sparta.scheduler.service.ScheduleService;
 
 @RestController

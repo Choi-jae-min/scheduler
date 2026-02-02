@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sparta.scheduler.dto.*;
+import sparta.scheduler.dto.schedule.*;
 import sparta.scheduler.entity.Schedule;
 import sparta.scheduler.repository.ScheduleRepository;
 
@@ -97,5 +97,11 @@ public class ScheduleService {
 
         scheduleRepository.delete(schedule);
         return new DeleteScheduleResponse(scheduleId,"성공적으로 삭제 되었습니다");
+    }
+
+    public void checkSchedule(Long scheduleId){
+        scheduleRepository.findById(scheduleId).orElseThrow(
+                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+        );
     }
 }
