@@ -1,4 +1,4 @@
-package sparta.scheduler.dto;
+package sparta.scheduler.dto.schedule;
 
 import lombok.Getter;
 
