@@ -3,11 +3,13 @@ package sparta.scheduler.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import sparta.scheduler.dto.CreateScheduleRequest;
 import sparta.scheduler.dto.CreateScheduleResponse;
+import sparta.scheduler.dto.GetAllScheduleResponse;
 import sparta.scheduler.service.ScheduleService;
 
 @RestController
@@ -20,4 +22,11 @@ public class ScheduleController {
         CreateScheduleResponse result = scheduleService.createSchedule(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
+
+    @GetMapping("/schedule")
+    public ResponseEntity<GetAllScheduleResponse> getAll(){
+        GetAllScheduleResponse result = scheduleService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
 }
