@@ -29,7 +29,7 @@ public class Schedule {
     @Column(length = 200, nullable = false)
     private String content;
 
-    @Column
+    @Column(nullable = false)
     private String poster;
 
     @Column(nullable = false)
