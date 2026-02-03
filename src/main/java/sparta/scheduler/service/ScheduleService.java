@@ -36,19 +36,19 @@ public class ScheduleService {
     @Transactional
     public GetAllScheduleResponse getAll() {
         List<Schedule> schedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
-       List<ScheduleDto> scheduleDtos = new ArrayList<>();
-       for (Schedule schedule : schedules) {
-           ScheduleDto scheduleDto = new ScheduleDto(
-                   schedule.getId(),
-                   schedule.getTitle(),
-                   schedule.getContent(),
-                   schedule.getPoster(),
-                   schedule.getCreatedAt(),
-                   schedule.getLastModifiedAt()
-           );
-           scheduleDtos.add(scheduleDto);
-       }
-       return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
+        List<ScheduleDto> scheduleDtos = new ArrayList<>();
+        for (Schedule schedule : schedules) {
+            ScheduleDto scheduleDto = new ScheduleDto(
+                    schedule.getId(),
+                    schedule.getTitle(),
+                    schedule.getContent(),
+                    schedule.getPoster(),
+                    schedule.getCreatedAt(),
+                    schedule.getLastModifiedAt()
+            );
+            scheduleDtos.add(scheduleDto);
+        }
+        return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
     }
 
     @Transactional

@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sparta.scheduler.dto.comment.CreateCommentRequest;
 import sparta.scheduler.dto.comment.CreateCommentResponse;
+import sparta.scheduler.dto.comment.DeleteCommentResponse;
 import sparta.scheduler.entity.Comment;
+import sparta.scheduler.exception.InvalidPasswordException;
 import sparta.scheduler.repository.CommentRepository;
 
 import java.util.List;
@@ -22,6 +24,26 @@ public class CommentService {
         if (commentList.size() >= 10) {
             throw new IllegalStateException("해당 일정에 댓글이 10개 이상입니다.");
         }
+    }
+
+    public void checkCommentPassword(Long commentId, String password) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 ID 입력입니다.")
+        );
+
+        if(!comment.getPassword().equals(password)){
+            throw new InvalidPasswordException();
+        }
+    }
+
+    public DeleteCommentResponse deleteComment(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(
+                () -> new IllegalArgumentException("잘못된 ID 입력입니다.")
+        );
+
+        commentRepository.delete(comment);
+
+        return new DeleteCommentResponse(commentId , "성공적으로 삭제 되었습니다.");
     }
 
     public CreateCommentResponse createComment(CreateCommentRequest createCommentRequest){
