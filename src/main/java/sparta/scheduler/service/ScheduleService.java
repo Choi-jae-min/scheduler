@@ -21,7 +21,7 @@ public class ScheduleService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CreateScheduleResponse createSchedule(CreateScheduleRequest scheduleRequest) {
+    public Long createSchedule(CreateScheduleRequest scheduleRequest) {
         Schedule schedule = new Schedule(
                 scheduleRequest.getTitle(),
                 scheduleRequest.getContent(),
@@ -30,7 +30,7 @@ public class ScheduleService {
         );
         scheduleRepository.save(schedule);
 
-        return new CreateScheduleResponse("성공적으로 생성 되었습니다." , schedule.getId());
+        return schedule.getId();
     }
 
     @Transactional(readOnly = true)

@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sparta.scheduler.dto.DataResponseDto;
+import sparta.scheduler.dto.ErrorResponseDto;
+import sparta.scheduler.dto.ResponseDto;
 import sparta.scheduler.dto.schedule.*;
 import sparta.scheduler.service.ScheduleService;
 
@@ -13,16 +16,16 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping("/schedules")
-    public ResponseEntity<CreateScheduleResponse> create(@RequestBody CreateScheduleRequest request) {
-        CreateScheduleResponse result = scheduleService.createSchedule(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    public ResponseEntity<ResponseDto<CreateScheduleResponse>> create(@RequestBody CreateScheduleRequest request) {
+        try {
+            Long createdScheduleId = scheduleService.createSchedule(request);
+            CreateScheduleResponse response = new CreateScheduleResponse(createdScheduleId);
+            return ResponseEntity.status(HttpStatus.CREATED).body(DataResponseDto.of("성공" , response));
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorResponseDto.of(e.getMessage()));
+        }
     }
 
-//    @GetMapping("/schedules/all")
-//    public ResponseEntity<GetAllScheduleResponse> getAll(){
-//        GetAllScheduleResponse result = scheduleService.getAll();
-//        return ResponseEntity.status(HttpStatus.OK).body(result);
-//    }
     @GetMapping("/schedules")
     public ResponseEntity<GetAllScheduleResponse> getAllByPoster(@RequestParam(required = false) String poster){
         if(poster == null || poster.isBlank()){
