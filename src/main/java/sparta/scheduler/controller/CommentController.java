@@ -15,7 +15,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/comment")
+    @PostMapping("/comments")
     public ResponseEntity<CreateCommentResponse> createComment(@RequestBody CreateCommentRequest createCommentRequest) {
         commentService.checkCommentCnt(createCommentRequest.getScheduleId());
 
@@ -24,7 +24,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @DeleteMapping("/comment/{commentId}")
+    @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<DeleteCommentResponse> deleteComment(
             @RequestHeader("x-Comment-Password") String password,
             @PathVariable Long commentId

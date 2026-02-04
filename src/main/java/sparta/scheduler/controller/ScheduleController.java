@@ -12,25 +12,25 @@ import sparta.scheduler.service.ScheduleService;
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
-    @PostMapping("/schedule")
+    @PostMapping("/schedules")
     public ResponseEntity<CreateScheduleResponse> create(@RequestBody CreateScheduleRequest request) {
         CreateScheduleResponse result = scheduleService.createSchedule(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @GetMapping("/schedule")
+    @GetMapping("/schedules")
     public ResponseEntity<GetAllScheduleResponse> getAll(){
         GetAllScheduleResponse result = scheduleService.getAll();
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/schedule/{scheduleId}")
+    @GetMapping("/schedules/{scheduleId}")
     public ResponseEntity<GetScheduleResponse> getSchedule(@PathVariable Long scheduleId){
         GetScheduleResponse result = scheduleService.getSchedule(scheduleId);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @PatchMapping("/schedule/{scheduleId}")
+    @PatchMapping("/schedules/{scheduleId}")
     public ResponseEntity<UpdateScheduleResponse> updateSchedule(
             @RequestHeader("x-Scheduler-Password") String password,
             @PathVariable Long scheduleId ,
@@ -45,7 +45,7 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @DeleteMapping("/schedule/{scheduleId}")
+    @DeleteMapping("/schedules/{scheduleId}")
     public ResponseEntity<DeleteScheduleResponse> deleteSchedule(
             @RequestHeader("x-Scheduler-Password") String password,
             @PathVariable Long scheduleId) {

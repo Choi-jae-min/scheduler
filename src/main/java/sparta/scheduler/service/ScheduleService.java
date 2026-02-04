@@ -33,7 +33,7 @@ public class ScheduleService {
         return new CreateScheduleResponse("성공적으로 생성 되었습니다." , schedule.getId());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public GetAllScheduleResponse getAll() {
         List<Schedule> schedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
         List<ScheduleDto> scheduleDtos = new ArrayList<>();
@@ -51,7 +51,7 @@ public class ScheduleService {
         return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public GetScheduleResponse getSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
