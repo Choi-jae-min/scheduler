@@ -4,18 +4,18 @@ Server_Url = localhost:8080
 
 | 기능       | Method | URL | 설명|
 |----------|--------|--------------------|--------------|
-| 일정 등록    | POST   | /api/scheduler| 일정을 등록합니다. |
-| 일정 조회    | GET    | /api/scheduler/{id} | 하나의 일정을 조회합니다. |
-| 일정 전체 조회 | GET    | /api/scheduler | 모든 일정리스트를 조회합니다. |
-| 일정 수정    | PATCH    | /api/scheduler/{id} | 특정 일정의 정보를 수정합니다. |
-| 일정 삭제    | DELETE | /api/scheduler/{id} | 특정 일정을 삭제합니다. |
+| 일정 등록    | POST   | /api/schedulers| 일정을 등록합니다. |
+| 일정 조회    | GET    | /api/schedulers/{id} | 하나의 일정을 조회합니다. |
+| 일정 리스트 조회 | GET    | /api/schedulers | 조건에 맞는 일정리스트를 조회합니다. |
+| 일정 수정    | PATCH    | /api/schedulers/{id} | 특정 일정의 정보를 수정합니다. |
+| 일정 삭제    | DELETE | /api/schedulers/{id} | 특정 일정을 삭제합니다. |
 
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ## 1. 일정 등록
 ```
-curl -X POST http://{Server_Url}/api/scheduler \
+curl -X POST http://{Server_Url}/api/schedulers \
   -H "Content-Type: application/json" \
   -d '{ 
       	"title": "제목",
@@ -53,14 +53,17 @@ body : 성공
 ```
   {
     "message" : "성공적으로 생성 되었습니다." ,
-    "id" : 1 
+    "data" : {
+      "id" : 1
+    } 
   }
 ```
 
-body : 실패( 잘못된 값 입력)
+body : 실패 400
 ```
   {
-    "message" : "필수값이 누락되었습니다." 
+    "message" : "필수값이 누락되었습니다." ,
+    "data" : null
   }
 ```
 
@@ -68,15 +71,16 @@ body : 실패( 잘못된 값 입력)
 body : 실패( 내부 서버 에러)
 ```
   {
-    "message" : "서버 내부 에러." 
+    "message" : "서버 내부 에러.",
+    "data" : null
   }
 ```
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## 2. 일정 조회
+## 2. 일정 단건 조회
 ```
-curl -X GET http://{Server_Url}/api/scheduler/{id} \
+curl -X GET http://{Server_Url}/api/schedulers/{id} \
   -H "Accept: application/json" \
 ```
 
@@ -93,7 +97,6 @@ status code
 | 코드 | 설명 |
 |------|-----|
 | 200 | 조회 완료 |
-| 400 | 파라미터 형식 오류 |
 | 404 | 해당 일정 없음 |
 | 500 | 서버 오류 |
 
@@ -115,10 +118,8 @@ body : 성공
 body : 실패
 ```
   {
-    "message" : "잘못된 id 입력" 
-  }
-  {
-    "message": "id는 숫자여야 합니다."
+    "message" : "존재하지 않는 일정입니다",
+    "data" : null 
   }
 ```
 
@@ -126,17 +127,23 @@ body : 실패
 body : 실패( 내부 서버 에러)
 ```
   {
-    "message" : "서버 내부 에러." 
+    "message" : "서버 내부 에러.",
+    "data" : null 
   }
 ```
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-## 3. 일정 전체 조회
+## 3. 일정 리스트 조회
 ```
-curl -X GET http://{Server_Url}/api/scheduler \
+curl -X GET http://{Server_Url}/api/schedulers \
   -H "Accept: application/json" \
 ```
+RequestParam
+| 파라미터       | 타입 | 필수 여부 | 설명 |
+|----------|--------|--------------------|----|
+| poster | String | 선택 | 작성자 명(없을 경우 전체 조회) |
+
 
 Path Parameter
 없음
@@ -172,7 +179,8 @@ body : 성공
 body : 실패
 ```
   {
-    "message" : "잘못된 요청 형식" 
+    "message" : "잘못된 요청 형식" ,
+    "data" : null
   }
 ```
 
@@ -180,7 +188,8 @@ body : 실패
 body : 실패( 내부 서버 에러)
 ```
   {
-    "message" : "서버 내부 에러." 
+    "message" : "서버 내부 에러." ,
+    "data" : null
   }
 ```
 
@@ -188,7 +197,7 @@ body : 실패( 내부 서버 에러)
 
 ## 4. 일정 수정
 ```
-curl -X PATCH http://{Server_Url}/api/scheduler/{id} \
+curl -X PATCH http://{Server_Url}/api/schedulers/{id} \
   -H "Content-Type: application/json" \
   -H "X-Scheduler-Password: 비밀번호"
   -d '{ 
@@ -242,28 +251,32 @@ body : 성공
 body : 실패 400
 ```
   {
-    "message" : "잘못된 요청 형식" 
+    "message" : "잘못된 요청 형식" ,
+    "data" : null
   }
 ```
 
 body : 실패 잘못된 비밀 번호 입력 403
 ```
   {
-    "message" : "잘못된 비밀 번호" 
+    "message" : "잘못된 비밀 번호입니다." ,
+    "data" : null
   }
 ```
 body : 실패 잘못된 id 입력 404
 
 ```
   {
-    "message" : "유효하지 않은 id" 
+    "message" : "존재하지 않는 일정입니다" ,
+    "data" : null
   }
 ```
 
 body : 실패( 내부 서버 에러) 500
 ```
   {
-    "message" : "서버 내부 에러." 
+    "message" : "서버 내부 에러." ,
+    "data" : null
   }
 ```
 
@@ -300,34 +313,40 @@ body : 성공
 ```
   {
     "message" : "성공적으로 삭제 되었습니다." ,
-    "id" : 1
+    "data" : {
+      "deletedId" : 1
+    }
  }
 ```
 
 body : 실패 400
 ```
   {
-    "message" : "잘못된 요청 형식" 
+    "message" : "잘못된 요청 형식" ,
+    "data" : null
   }
 ```
 
 body : 실패 잘못된 비밀 번호 입력 403
 ```
   {
-    "message" : "잘못된 비밀 번호" 
+    "message" : "잘못된 비밀 번호입니다" ,
+    "data" : null
   }
 ```
 body : 실패 잘못된 id 입력 404
 
 ```
   {
-    "message" : "유효하지 않은 id" 
+    "message" : "존재하지 않는 일정" ,
+    "data" : null
   }
 ```
 
 body : 실패( 내부 서버 에러) 500
 ```
   {
-    "message" : "서버 내부 에러." 
+    "message" : "서버 내부 에러.",
+    "data" : null
   }
 ```
