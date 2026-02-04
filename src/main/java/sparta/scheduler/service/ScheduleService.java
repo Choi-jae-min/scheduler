@@ -1,5 +1,6 @@
 package sparta.scheduler.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import sparta.scheduler.dto.comment.CommentDto;
 import sparta.scheduler.dto.schedule.*;
 import sparta.scheduler.entity.Comment;
 import sparta.scheduler.entity.Schedule;
+import sparta.scheduler.exception.InvalidPasswordException;
 import sparta.scheduler.repository.CommentRepository;
 import sparta.scheduler.repository.ScheduleRepository;
 
@@ -65,7 +67,7 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public ScheduleWithCommentDto getSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new EntityNotFoundException("존재하지 않는 일정입니다.")
         );
 
         List<Comment> commentList = commentRepository.findALLByScheduleId(scheduleId);
@@ -91,18 +93,19 @@ public class ScheduleService {
         );
     }
 
-    public Boolean checkValidPassword(Long scheduleId, String password) {
+    public void checkValidPassword(Long scheduleId, String password) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new EntityNotFoundException("존재하지 않는 일정입니다.")
         );
-
-        return schedule.getPassword().equals(password);
+        if(!schedule.getPassword().equals(password)){
+            throw new InvalidPasswordException();
+        }
     }
 
     @Transactional
     public ScheduleDto updateSchedule(Long scheduleId, UpdateScheduleRequest request){
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new EntityNotFoundException("존재하지 않는 일정입니다.")
         );
         schedule.update(request);
         return new ScheduleDto(
@@ -118,7 +121,7 @@ public class ScheduleService {
     @Transactional
     public Long deleteSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("이미 존재하지 않는 일정입니다.")
+                () -> new EntityNotFoundException("이미 존재하지 않는 일정입니다.")
         );
 
         scheduleRepository.delete(schedule);
@@ -127,7 +130,7 @@ public class ScheduleService {
 
     public void checkSchedule(Long scheduleId){
         scheduleRepository.findById(scheduleId).orElseThrow(
-                () -> new IllegalStateException("존재하지 않는 일정입니다.")
+                () -> new EntityNotFoundException("존재하지 않는 일정입니다.")
         );
     }
 }

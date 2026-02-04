@@ -1,5 +1,6 @@
 package sparta.scheduler.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sparta.scheduler.dto.comment.CreateCommentRequest;
@@ -28,7 +29,7 @@ public class CommentService {
 
     public void checkCommentPassword(Long commentId, String password) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 ID 입력입니다.")
+                () -> new EntityNotFoundException("잘못된 ID 입력입니다.")
         );
 
         if(!comment.getPassword().equals(password)){
@@ -38,7 +39,7 @@ public class CommentService {
 
     public DeleteCommentResponse deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new IllegalArgumentException("잘못된 ID 입력입니다.")
+                () -> new EntityNotFoundException("잘못된 ID 입력입니다.")
         );
 
         commentRepository.delete(comment);
