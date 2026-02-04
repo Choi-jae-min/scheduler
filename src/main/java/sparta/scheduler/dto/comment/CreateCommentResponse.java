@@ -1,17 +1,11 @@
 package sparta.scheduler.dto.comment;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class CreateCommentResponse {
-    private final String message;
     private final Long id;
     private final Long ScheduleId;
-
-    public CreateCommentResponse(String message, Long id, Long ScheduleId) {
-        this.message = message;
-        this.id = id;
-        this.ScheduleId = ScheduleId;
-    }
-
 }

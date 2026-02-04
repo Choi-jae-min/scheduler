@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sparta.scheduler.dto.DataResponseDto;
+import sparta.scheduler.dto.ResponseDto;
 import sparta.scheduler.dto.comment.CreateCommentRequest;
 import sparta.scheduler.dto.comment.CreateCommentResponse;
 import sparta.scheduler.dto.comment.DeleteCommentResponse;
@@ -16,22 +18,21 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comments")
-    public ResponseEntity<CreateCommentResponse> createComment(@RequestBody CreateCommentRequest createCommentRequest) {
+    public ResponseEntity<ResponseDto<CreateCommentResponse>> createComment(@RequestBody CreateCommentRequest createCommentRequest) {
         commentService.checkCommentCnt(createCommentRequest.getScheduleId());
-
-        CreateCommentResponse result = commentService.createComment(createCommentRequest);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+        CreateCommentResponse createCommentResponse = commentService.createComment(createCommentRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(DataResponseDto.of("댓글 등록에 성공하였습니다." ,createCommentResponse));
     }
 
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<DeleteCommentResponse> deleteComment(
+    public ResponseEntity<ResponseDto<DeleteCommentResponse>> deleteComment(
             @RequestHeader("x-Comment-Password") String password,
             @PathVariable Long commentId
     ) {
         commentService.checkCommentPassword(commentId, password);
 
-        DeleteCommentResponse result = commentService.deleteComment(commentId);
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        Long deletedCommentId = commentService.deleteComment(commentId);
+        DeleteCommentResponse deleteCommentResponse = new DeleteCommentResponse(deletedCommentId);
+        return ResponseEntity.status(HttpStatus.OK).body(DataResponseDto.of("성공적으로 댓글을 삭제하였습니다." ,deleteCommentResponse));
     }
 }

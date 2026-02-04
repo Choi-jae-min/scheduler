@@ -7,5 +7,4 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DeleteCommentResponse {
     private final Long deletedId;
-    private final String message;
 }

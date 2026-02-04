@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sparta.scheduler.dto.comment.CreateCommentRequest;
 import sparta.scheduler.dto.comment.CreateCommentResponse;
-import sparta.scheduler.dto.comment.DeleteCommentResponse;
 import sparta.scheduler.entity.Comment;
 import sparta.scheduler.exception.CommentLimitExceededException;
 import sparta.scheduler.exception.InvalidPasswordException;
@@ -38,14 +37,14 @@ public class CommentService {
         }
     }
 
-    public DeleteCommentResponse deleteComment(Long commentId) {
+    public Long deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
                 () -> new EntityNotFoundException("존재하지 않는 댓글입니다.")
         );
 
         commentRepository.delete(comment);
 
-        return new DeleteCommentResponse(commentId , "성공적으로 삭제 되었습니다.");
+        return commentId;
     }
 
     public CreateCommentResponse createComment(CreateCommentRequest createCommentRequest){
@@ -56,7 +55,6 @@ public class CommentService {
                 createCommentRequest.getScheduleId()
         );
         commentRepository.save(comment);
-
-        return new CreateCommentResponse("댓글 등록 성공" , comment.getId(), comment.getScheduleId());
+        return new CreateCommentResponse(comment.getId(), comment.getScheduleId());
     }
 }
