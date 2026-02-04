@@ -18,9 +18,15 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @GetMapping("/schedules")
+    @GetMapping("/schedules/all")
     public ResponseEntity<GetAllScheduleResponse> getAll(){
         GetAllScheduleResponse result = scheduleService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @GetMapping("/schedules/poster/{poster}")
+    public ResponseEntity<GetAllScheduleResponse> getAllByPoster(@PathVariable String poster){
+        GetAllScheduleResponse result = scheduleService.getAllByPoster(poster);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
