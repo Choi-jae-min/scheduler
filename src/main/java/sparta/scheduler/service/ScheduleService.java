@@ -50,6 +50,7 @@ public class ScheduleService {
         }
         return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
     }
+
     @Transactional(readOnly = true)
     public GetAllScheduleResponse getAllByPoster(String poster) {
         List<Schedule> schedules = scheduleRepository.findAllByPoster(poster,Sort.by(Sort.Direction.DESC, "lastModifiedAt"));

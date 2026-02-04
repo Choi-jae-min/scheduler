@@ -18,14 +18,17 @@ public class ScheduleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @GetMapping("/schedules/all")
-    public ResponseEntity<GetAllScheduleResponse> getAll(){
-        GetAllScheduleResponse result = scheduleService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(result);
-    }
-
-    @GetMapping("/schedules/poster/{poster}")
-    public ResponseEntity<GetAllScheduleResponse> getAllByPoster(@PathVariable String poster){
+//    @GetMapping("/schedules/all")
+//    public ResponseEntity<GetAllScheduleResponse> getAll(){
+//        GetAllScheduleResponse result = scheduleService.getAll();
+//        return ResponseEntity.status(HttpStatus.OK).body(result);
+//    }
+    @GetMapping("/schedules")
+    public ResponseEntity<GetAllScheduleResponse> getAllByPoster(@RequestParam(required = false) String poster){
+        if(poster == null || poster.isBlank()){
+            GetAllScheduleResponse result = scheduleService.getAll();
+            return ResponseEntity.status(HttpStatus.OK).body(result);
+        }
         GetAllScheduleResponse result = scheduleService.getAllByPoster(poster);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
