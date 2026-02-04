@@ -7,6 +7,7 @@ import sparta.scheduler.dto.comment.CreateCommentRequest;
 import sparta.scheduler.dto.comment.CreateCommentResponse;
 import sparta.scheduler.dto.comment.DeleteCommentResponse;
 import sparta.scheduler.entity.Comment;
+import sparta.scheduler.exception.CommentLimitExceededException;
 import sparta.scheduler.exception.InvalidPasswordException;
 import sparta.scheduler.repository.CommentRepository;
 
@@ -23,13 +24,13 @@ public class CommentService {
         List<Comment> commentList = commentRepository.findALLByScheduleId(scheduleId);
 
         if (commentList.size() >= 10) {
-            throw new IllegalStateException("해당 일정에 댓글이 10개 이상입니다.");
+            throw new CommentLimitExceededException();
         }
     }
 
     public void checkCommentPassword(Long commentId, String password) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new EntityNotFoundException("잘못된 ID 입력입니다.")
+                () -> new EntityNotFoundException("존재하지 않는 댓글입니다.")
         );
 
         if(!comment.getPassword().equals(password)){
@@ -39,7 +40,7 @@ public class CommentService {
 
     public DeleteCommentResponse deleteComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new EntityNotFoundException("잘못된 ID 입력입니다.")
+                () -> new EntityNotFoundException("존재하지 않는 댓글입니다.")
         );
 
         commentRepository.delete(comment);

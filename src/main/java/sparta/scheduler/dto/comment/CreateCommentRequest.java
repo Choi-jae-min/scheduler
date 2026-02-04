@@ -8,4 +8,5 @@ public class CreateCommentRequest {
     private String poster;
     private String password;
     private Long scheduleId;
+
 }
