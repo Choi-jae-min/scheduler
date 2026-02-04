@@ -30,4 +30,11 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(ErrorResponseDto.of(e.getMessage()));
     }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<ErrorResponseDto<?>> commentLimitExceededException(CommentLimitExceededException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponseDto.of(e.getMessage()));
+    }
 }
