@@ -34,17 +34,15 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public GetAllScheduleResponse getAll() {
+    public List<ScheduleDto> getAll() {
         List<Schedule> schedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
-        List<ScheduleDto> scheduleDtos = convertScheduleDtoList(schedules);
-        return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
+        return convertScheduleDtoList(schedules);
     }
 
     @Transactional(readOnly = true)
-    public GetAllScheduleResponse getAllByPoster(String poster) {
+    public List<ScheduleDto> getAllByPoster(String poster) {
         List<Schedule> schedules = scheduleRepository.findAllByPoster(poster,Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
-        List<ScheduleDto> scheduleDtos = convertScheduleDtoList(schedules);
-        return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
+        return convertScheduleDtoList(schedules);
     }
 
     private List<ScheduleDto> convertScheduleDtoList(List<Schedule> schedules) {
@@ -65,7 +63,7 @@ public class ScheduleService {
     }
 
     @Transactional(readOnly = true)
-    public GetScheduleResponse getSchedule(Long scheduleId) {
+    public ScheduleWithCommentDto getSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
         );
@@ -82,7 +80,7 @@ public class ScheduleService {
             );
             commentDtos.add(commentDto);
         }
-        ScheduleWithCommentDto scheduleDto = new ScheduleWithCommentDto(
+        return new ScheduleWithCommentDto(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
@@ -91,7 +89,6 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getLastModifiedAt()
         );
-        return new GetScheduleResponse("성공적으로 조회 되었습니다",scheduleDto);
     }
 
     public Boolean checkValidPassword(Long scheduleId, String password) {
@@ -103,12 +100,12 @@ public class ScheduleService {
     }
 
     @Transactional
-    public UpdateScheduleResponse updateSchedule(Long scheduleId, UpdateScheduleRequest request){
+    public ScheduleDto updateSchedule(Long scheduleId, UpdateScheduleRequest request){
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 일정입니다.")
         );
         schedule.update(request);
-        ScheduleDto scheduleDto = new ScheduleDto(
+        return new ScheduleDto(
                 schedule.getId(),
                 schedule.getTitle(),
                 schedule.getContent(),
@@ -116,17 +113,16 @@ public class ScheduleService {
                 schedule.getCreatedAt(),
                 schedule.getLastModifiedAt()
         );
-        return new UpdateScheduleResponse("성공적으로 수정 되었습니다" , scheduleDto);
     }
 
     @Transactional
-    public DeleteScheduleResponse deleteSchedule(Long scheduleId) {
+    public Long deleteSchedule(Long scheduleId) {
         Schedule schedule = scheduleRepository.findById(scheduleId).orElseThrow(
                 () -> new IllegalStateException("이미 존재하지 않는 일정입니다.")
         );
 
         scheduleRepository.delete(schedule);
-        return new DeleteScheduleResponse(scheduleId,"성공적으로 삭제 되었습니다");
+        return scheduleId;
     }
 
     public void checkSchedule(Long scheduleId){
