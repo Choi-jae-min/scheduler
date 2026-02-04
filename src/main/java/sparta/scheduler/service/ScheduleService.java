@@ -36,24 +36,18 @@ public class ScheduleService {
     @Transactional(readOnly = true)
     public GetAllScheduleResponse getAll() {
         List<Schedule> schedules = scheduleRepository.findAll(Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
-        List<ScheduleDto> scheduleDtos = new ArrayList<>();
-        for (Schedule schedule : schedules) {
-            ScheduleDto scheduleDto = new ScheduleDto(
-                    schedule.getId(),
-                    schedule.getTitle(),
-                    schedule.getContent(),
-                    schedule.getPoster(),
-                    schedule.getCreatedAt(),
-                    schedule.getLastModifiedAt()
-            );
-            scheduleDtos.add(scheduleDto);
-        }
+        List<ScheduleDto> scheduleDtos = convertScheduleDtoList(schedules);
         return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
     }
 
     @Transactional(readOnly = true)
     public GetAllScheduleResponse getAllByPoster(String poster) {
         List<Schedule> schedules = scheduleRepository.findAllByPoster(poster,Sort.by(Sort.Direction.DESC, "lastModifiedAt"));
+        List<ScheduleDto> scheduleDtos = convertScheduleDtoList(schedules);
+        return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
+    }
+
+    private List<ScheduleDto> convertScheduleDtoList(List<Schedule> schedules) {
         List<ScheduleDto> scheduleDtos = new ArrayList<>();
         for (Schedule schedule : schedules) {
             ScheduleDto scheduleDto = new ScheduleDto(
@@ -66,7 +60,8 @@ public class ScheduleService {
             );
             scheduleDtos.add(scheduleDto);
         }
-        return new GetAllScheduleResponse("성공적으로 조회 되었습니다." , scheduleDtos);
+
+        return scheduleDtos;
     }
 
     @Transactional(readOnly = true)
