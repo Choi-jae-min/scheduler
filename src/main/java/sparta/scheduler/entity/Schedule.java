@@ -5,20 +5,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import sparta.scheduler.dto.schedule.UpdateScheduleRequest;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "Schedules")
-public class Schedule {
+public class Schedule extends BaseEntity {
 
     private static final int MAX_TITLE_LENGTH = 30;
     private static final int MAX_CONTENT_LENGTH = 200;
@@ -38,12 +32,6 @@ public class Schedule {
 
     @Column(nullable = false)
     private String password;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime lastModifiedAt;
 
     public Schedule(String title, String content, String poster, String password) {
         this.title = title;
