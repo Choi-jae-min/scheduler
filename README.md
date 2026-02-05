@@ -503,3 +503,8 @@ body : 실패( 내부 서버 에러) 500
   }
 ```
 
+--------
+# ERD
+<img width="496" height="984" alt="image" src="https://github.com/user-attachments/assets/65bc017e-03e6-42d8-8e6a-e9cd68a249d4" />
+
+
