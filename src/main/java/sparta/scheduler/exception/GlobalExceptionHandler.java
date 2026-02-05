@@ -12,7 +12,7 @@ import sparta.scheduler.dto.ErrorResponseDto;
 import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = {"sparta.scheduler.controller"})
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
