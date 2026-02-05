@@ -20,14 +20,17 @@ import java.time.LocalDateTime;
 @Table(name = "Schedules")
 public class Schedule {
 
+    private static final int MAX_TITLE_LENGTH = 30;
+    private static final int MAX_CONTENT_LENGTH = 200;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 30, nullable = false)
+    @Column(length = MAX_TITLE_LENGTH, nullable = false)
     private String title;
 
-    @Column(length = 200, nullable = false)
+    @Column(length = MAX_CONTENT_LENGTH, nullable = false)
     private String content;
 
     @Column(nullable = false)

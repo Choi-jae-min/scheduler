@@ -18,11 +18,13 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final ScheduleService scheduleService;
 
+    private static final int MAX_COMMENTS_CNT = 10;
+
     public void checkCommentCnt(Long scheduleId) {
         scheduleService.checkSchedule(scheduleId);
         List<Comment> commentList = commentRepository.findALLByScheduleId(scheduleId);
 
-        if (commentList.size() >= 10) {
+        if (commentList.size() >= MAX_COMMENTS_CNT) {
             throw new CommentLimitExceededException();
         }
     }

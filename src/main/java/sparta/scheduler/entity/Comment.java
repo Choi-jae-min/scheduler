@@ -19,11 +19,13 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class Comment {
 
+    private static final int MAX_CONTENT_LENGTH = 100;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = MAX_CONTENT_LENGTH, nullable = false)
     private String content;
 
     @Column(nullable = false)
