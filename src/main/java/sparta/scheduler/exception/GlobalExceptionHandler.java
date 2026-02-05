@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
                 .body(ErrorResponseDto.of(e.getMessage()));
     }
 
-    @ExceptionHandler(InvalidPasswordException.class)
+    @ExceptionHandler(CommentLimitExceededException.class)
     public ResponseEntity<ErrorResponseDto<?>> commentLimitExceededException(CommentLimitExceededException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
