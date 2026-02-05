@@ -1,5 +1,6 @@
 package sparta.scheduler.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping("/schedules")
-    public ResponseEntity<ResponseDto<CreateScheduleResponse>> create(@RequestBody CreateScheduleRequest request) {
+    public ResponseEntity<ResponseDto<CreateScheduleResponse>> create(@RequestBody @Valid CreateScheduleRequest request) {
         Long createdScheduleId = scheduleService.createSchedule(request);
         CreateScheduleResponse response = new CreateScheduleResponse(createdScheduleId);
         return ResponseEntity.status(HttpStatus.CREATED).body(DataResponseDto.of("성공적으로 일정을 생성하였습니다." , response));

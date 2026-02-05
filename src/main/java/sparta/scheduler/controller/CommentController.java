@@ -1,14 +1,13 @@
 package sparta.scheduler.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sparta.scheduler.dto.DataResponseDto;
 import sparta.scheduler.dto.ResponseDto;
-import sparta.scheduler.dto.comment.CreateCommentRequest;
-import sparta.scheduler.dto.comment.CreateCommentResponse;
-import sparta.scheduler.dto.comment.DeleteCommentResponse;
+import sparta.scheduler.dto.comment.*;
 import sparta.scheduler.service.CommentService;
 
 @RestController
@@ -18,7 +17,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/comments")
-    public ResponseEntity<ResponseDto<CreateCommentResponse>> createComment(@RequestBody CreateCommentRequest createCommentRequest) {
+    public ResponseEntity<ResponseDto<CreateCommentResponse>> createComment(@RequestBody @Valid CreateCommentRequest createCommentRequest) {
         commentService.checkCommentCnt(createCommentRequest.getScheduleId());
         CreateCommentResponse createCommentResponse = commentService.createComment(createCommentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(DataResponseDto.of("댓글 등록에 성공하였습니다." ,createCommentResponse));
